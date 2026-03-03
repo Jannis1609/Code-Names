@@ -1,6 +1,9 @@
 'use strict';
 
-const socket = io();
+// Connect to the server specified in the ?server= query param, or the current origin.
+// Example: http://141.72.176.152:8400/?server=http://141.72.176.152:8400
+const serverUrl = new URLSearchParams(window.location.search).get('server') || undefined;
+const socket = io(serverUrl);
 
 let mySocketId = null;
 let currentRoom = null;  // full game state from server

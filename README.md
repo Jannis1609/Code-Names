@@ -13,20 +13,53 @@ Two teams (Red and Blue) compete to identify their secret agents on a 5×5 word 
 - Hit the **Assassin** card and your team loses instantly.
 - First team to reveal all their cards wins.
 
-## Setup & Running
+## Server
+
+The game server runs at:
+
+```
+http://141.72.176.152:8400
+```
+
+Open that address in your browser to play.
+
+## Setup & Running (standalone)
 
 ```bash
 npm install
-npm start
+npm start        # starts on port 8400 (or $PORT)
 ```
 
-Then open **http://localhost:3000** in your browser.
+The port can be overridden via environment variable:
+
+```bash
+PORT=8401 npm start
+```
+
+## Integrating into an Existing Server
+
+If you already have an Express + Socket.io server, require `game-server.js` and pass your `io` instance:
+
+```js
+const { Server } = require('socket.io');
+const registerCodeNames = require('./game-server');
+
+// your existing http server & io setup:
+const io = new Server(httpServer, { cors: { origin: '*' } });
+
+// mount the Code Names handlers:
+registerCodeNames(io);
+
+// serve the static frontend files from public/:
+app.use(express.static(path.join(__dirname, 'public')));
+```
 
 ## Project Structure
 
 ```
-server.js        – Express + Socket.io game server
-words.js         – Word list (200+ words)
+server.js        – Standalone Express + Socket.io entrypoint (port 8400)
+game-server.js   – Reusable game logic module: registerHandlers(io)
+words.js         – Word list (220 words)
 public/
   index.html     – Game UI
   style.css      – Styling
