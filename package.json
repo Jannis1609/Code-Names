@@ -1,0 +1,25 @@
+{
+  "name": "code-names",
+  "version": "1.0.0",
+  "description": "Multiplayer Code Names word game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jannis1609/Code-Names.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jannis1609/Code-Names/issues"
+  },
+  "homepage": "https://github.com/Jannis1609/Code-Names#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}

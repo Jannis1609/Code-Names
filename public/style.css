@@ -1,0 +1,465 @@
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:      #c0392b;
+  --red-light:#e74c3c;
+  --red-dark: #922b21;
+  --blue:     #1a5276;
+  --blue-light:#2980b9;
+  --blue-dark: #154360;
+  --neutral:  #c8a96e;
+  --neutral-light: #d4b896;
+  --assassin: #1a1a2e;
+  --bg:       #0f0f1a;
+  --surface:  #1e1e30;
+  --surface2: #2a2a40;
+  --text:     #e8e8f0;
+  --muted:    #8888aa;
+  --border:   #3a3a55;
+  --card-unrevealed: #c8b98a;
+  --card-text: #1a1200;
+  --radius:   8px;
+  --shadow:   0 4px 20px rgba(0,0,0,0.4);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Screens ──────────────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── Lobby ────────────────────────────────────────────────── */
+.lobby-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.game-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  background: linear-gradient(135deg, var(--red-light), var(--blue-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow);
+}
+
+label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+input[type="text"], select {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus, select:focus {
+  outline: none;
+  border-color: var(--blue-light);
+}
+
+.lobby-actions { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+
+.divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.join-row { display: flex; gap: 0.5rem; }
+.join-row input { flex: 1; text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.btn {
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.04em;
+}
+
+.btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(0); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary  { background: var(--blue-light); color: #fff; }
+.btn-secondary{ background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-small    { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+.btn-large    { padding: 0.85rem 2rem; font-size: 1.1rem; }
+.btn-red      { background: var(--red); color: #fff; width: 100%; margin-top: 0.5rem; }
+.btn-blue     { background: var(--blue); color: #fff; width: 100%; margin-top: 0.5rem; }
+
+/* ── Waiting Room ─────────────────────────────────────────── */
+.waiting-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.waiting-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.room-code-display {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.code-badge {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  background: var(--surface2);
+  padding: 0.2rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.team-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.team-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.team-red { border-top: 3px solid var(--red); }
+.team-blue { border-top: 3px solid var(--blue); }
+
+.role-group { margin-bottom: 1rem; }
+.role-group h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; }
+
+.player-list { list-style: none; min-height: 24px; }
+.player-list li {
+  padding: 0.25rem 0.5rem;
+  background: var(--surface2);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+.player-list li.me { font-weight: 700; }
+
+.unassigned-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.unassigned-section h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.5rem; }
+
+#start-game-area { text-align: center; }
+.start-status { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.5rem; min-height: 1.2em; }
+
+/* ── Game Layout ──────────────────────────────────────────── */
+.game-layout { display: flex; flex-direction: column; height: 100vh; }
+
+.game-topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1rem;
+  flex-shrink: 0;
+}
+
+.score-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.score-red  { font-weight: 800; color: var(--red-light); font-size: 1.1rem; }
+.score-blue { font-weight: 800; color: var(--blue-light); font-size: 1.1rem; }
+
+.turn-indicator {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 0.35rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.turn-indicator.red  { border-color: var(--red); color: var(--red-light); }
+.turn-indicator.blue { border-color: var(--blue); color: var(--blue-light); }
+
+.game-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 1rem;
+  gap: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Board ────────────────────────────────────────────────── */
+.board-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 620px;
+}
+
+.card-tile {
+  aspect-ratio: 5/3;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: clamp(0.55rem, 1.4vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: default;
+  user-select: none;
+  padding: 4px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+/* Unrevealed - plain card look for operatives */
+.card-tile.unrevealed {
+  background: var(--card-unrevealed);
+  color: var(--card-text);
+  border-color: #a8935a;
+}
+
+/* Clickable operative cards */
+.card-tile.clickable {
+  cursor: pointer;
+}
+.card-tile.clickable:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* Spymaster tinted unrevealed cards */
+.card-tile.spy-red    { background: #7a2020; color: #ffd0d0; border-color: var(--red); }
+.card-tile.spy-blue   { background: #1a3060; color: #c0d8ff; border-color: var(--blue-light); }
+.card-tile.spy-neutral{ background: #6b5a2e; color: #f0e0b0; border-color: #8b7340; }
+.card-tile.spy-assassin { background: #111; color: #888; border-color: #444; }
+
+/* Revealed cards */
+.card-tile.revealed-red      { background: var(--red); color: #fff; border-color: var(--red-dark); }
+.card-tile.revealed-blue     { background: var(--blue); color: #ddeeff; border-color: var(--blue-dark); }
+.card-tile.revealed-neutral  { background: #7a6a42; color: #e8d8b0; border-color: #5a4e30; }
+.card-tile.revealed-assassin { background: #111; color: #ccc; border-color: #222; }
+
+/* ── Sidebar ──────────────────────────────────────────────── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+}
+
+.clue-display {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+}
+
+.clue-label  { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.3rem; }
+.clue-word   { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.08em; }
+.clue-count  { font-size: 1rem; color: var(--muted); }
+.guesses-left{ font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+.action-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-panel h3 { font-size: 0.9rem; margin-bottom: 0.25rem; color: var(--muted); }
+
+.action-panel input, .action-panel select {
+  font-size: 0.9rem;
+}
+
+.sidebar-players {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  flex: 1;
+}
+
+.sidebar-players h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.5rem; }
+
+.mini-team { margin-bottom: 0.6rem; }
+.mini-team-label { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+.red-label  { color: var(--red-light); }
+.blue-label { color: var(--blue-light); }
+
+.mini-player-list { list-style: none; }
+.mini-player-list li {
+  font-size: 0.8rem;
+  padding: 0.15rem 0;
+  color: var(--muted);
+}
+.mini-player-list li.me { color: var(--text); font-weight: 600; }
+
+.room-code-small {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.hidden { display: none !important; }
+
+/* ── Game Over Overlay ────────────────────────────────────── */
+.game-over-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.game-over-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 3rem 3.5rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.game-over-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.game-over-subtitle {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.65rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  z-index: 200;
+  box-shadow: var(--shadow);
+  transition: opacity 0.3s;
+}
+
+.toast.error { border-color: var(--red); color: var(--red-light); }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .teams-grid { grid-template-columns: 1fr; }
+
+  .game-main { flex-direction: column; overflow: auto; }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .board {
+    gap: 5px;
+  }
+}

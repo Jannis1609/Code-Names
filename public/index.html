@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Names</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- LOBBY SCREEN -->
+  <div id="screen-lobby" class="screen active">
+    <div class="lobby-container">
+      <h1 class="game-title">CODE NAMES</h1>
+      <p class="subtitle">The multiplayer word guessing game</p>
+
+      <div class="card">
+        <label for="player-name">Your Name</label>
+        <input type="text" id="player-name" placeholder="Enter your name" maxlength="20" />
+
+        <div class="lobby-actions">
+          <button id="btn-create-room" class="btn btn-primary">Create Room</button>
+          <div class="divider">or</div>
+          <div class="join-row">
+            <input type="text" id="room-code-input" placeholder="Room Code" maxlength="4" />
+            <button id="btn-join-room" class="btn btn-secondary">Join Room</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAITING ROOM SCREEN -->
+  <div id="screen-waiting" class="screen">
+    <div class="waiting-container">
+      <h2>Waiting Room</h2>
+      <div class="room-code-display">
+        Room Code: <span id="display-room-code" class="code-badge"></span>
+        <button id="btn-copy-code" class="btn btn-small">Copy</button>
+      </div>
+
+      <div class="teams-grid">
+        <div class="team-panel team-red">
+          <h3>🔴 Red Team</h3>
+          <div class="role-group">
+            <h4>Spymaster</h4>
+            <ul id="red-spymaster-list" class="player-list"></ul>
+            <button class="btn btn-role btn-red" data-team="red" data-role="spymaster">Join as Spymaster</button>
+          </div>
+          <div class="role-group">
+            <h4>Operatives</h4>
+            <ul id="red-operative-list" class="player-list"></ul>
+            <button class="btn btn-role btn-red" data-team="red" data-role="operative">Join as Operative</button>
+          </div>
+        </div>
+
+        <div class="team-panel team-blue">
+          <h3>🔵 Blue Team</h3>
+          <div class="role-group">
+            <h4>Spymaster</h4>
+            <ul id="blue-spymaster-list" class="player-list"></ul>
+            <button class="btn btn-role btn-blue" data-team="blue" data-role="spymaster">Join as Spymaster</button>
+          </div>
+          <div class="role-group">
+            <h4>Operatives</h4>
+            <ul id="blue-operative-list" class="player-list"></ul>
+            <button class="btn btn-role btn-blue" data-team="blue" data-role="operative">Join as Operative</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="unassigned-section">
+        <h4>Unassigned Players</h4>
+        <ul id="unassigned-list" class="player-list"></ul>
+      </div>
+
+      <div id="start-game-area">
+        <p id="start-status" class="start-status"></p>
+        <button id="btn-start-game" class="btn btn-primary btn-large">Start Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <div class="game-layout">
+
+      <!-- Top bar -->
+      <div class="game-topbar">
+        <div class="score-display">
+          <span class="score-red" id="score-red">Red: 0/9</span>
+          <span class="turn-indicator" id="turn-indicator">Red's Turn</span>
+          <span class="score-blue" id="score-blue">Blue: 0/8</span>
+        </div>
+      </div>
+
+      <!-- Main content: board + sidebar -->
+      <div class="game-main">
+
+        <!-- Board -->
+        <div class="board-wrapper">
+          <div id="game-board" class="board"></div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+          <div id="clue-display" class="clue-display hidden">
+            <div class="clue-label">Current Clue</div>
+            <div class="clue-word" id="clue-word"></div>
+            <div class="clue-count" id="clue-count"></div>
+            <div class="guesses-left" id="guesses-left"></div>
+          </div>
+
+          <!-- Spymaster clue form -->
+          <div id="spymaster-panel" class="action-panel hidden">
+            <h3>Give a Clue</h3>
+            <input type="text" id="clue-input" placeholder="One word clue" maxlength="30" />
+            <select id="clue-count-input">
+              <option value="0">0 (unlimited)</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <button id="btn-give-clue" class="btn btn-primary">Give Clue</button>
+          </div>
+
+          <!-- Operative end turn -->
+          <div id="operative-panel" class="action-panel hidden">
+            <button id="btn-end-turn" class="btn btn-secondary">End Turn</button>
+          </div>
+
+          <!-- Player list -->
+          <div class="sidebar-players">
+            <h3>Players</h3>
+            <div class="mini-team">
+              <div class="mini-team-label red-label">🔴 Red</div>
+              <ul id="sidebar-red-list" class="mini-player-list"></ul>
+            </div>
+            <div class="mini-team">
+              <div class="mini-team-label blue-label">🔵 Blue</div>
+              <ul id="sidebar-blue-list" class="mini-player-list"></ul>
+            </div>
+          </div>
+
+          <div class="room-code-small">
+            Room: <strong id="game-room-code"></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game over overlay -->
+    <div id="game-over-overlay" class="game-over-overlay hidden">
+      <div class="game-over-card">
+        <div id="game-over-title" class="game-over-title"></div>
+        <div id="game-over-subtitle" class="game-over-subtitle"></div>
+        <button id="btn-play-again" class="btn btn-primary btn-large">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
