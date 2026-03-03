@@ -1,10 +1,13 @@
 'use strict';
 
+const crypto = require('crypto');
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const WORDS = require('./words');
+
+const UNLIMITED_GUESSES = 999;
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +22,7 @@ function generateRoomCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
   for (let i = 0; i < 4; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
+    code += chars[crypto.randomInt(chars.length)];
   }
   return code;
 }
@@ -53,6 +56,16 @@ function createBoard(startingTeam) {
   }));
 }
 
+function getCardTeamForPlayer(card, isSpymaster) {
+  if (card.revealed) return card.team;
+  return isSpymaster ? card.team : null;
+}
+
+function getCardIsAssassin(card, isSpymaster) {
+  if (card.revealed) return card.team === 'assassin';
+  return isSpymaster ? card.team === 'assassin' : false;
+}
+
 function getPublicState(room, socketId) {
   const player = room.players[socketId];
   const isSpymaster = player && player.role === 'spymaster';
@@ -61,8 +74,8 @@ function getPublicState(room, socketId) {
     ? room.board.map(card => ({
         word: card.word,
         revealed: card.revealed,
-        team: card.revealed ? card.team : (isSpymaster ? card.team : null),
-        isAssassin: card.revealed ? card.team === 'assassin' : (isSpymaster ? card.team === 'assassin' : false),
+        team: getCardTeamForPlayer(card, isSpymaster),
+        isAssassin: getCardIsAssassin(card, isSpymaster),
       }))
     : null;
 
@@ -232,7 +245,7 @@ io.on('connection', socket => {
     }
 
     room.clue = { word: clueWord.toUpperCase(), count: clueCount };
-    room.guessesLeft = clueCount === 0 ? 999 : clueCount + 1; // +1 allows one bonus guess
+    room.guessesLeft = clueCount === 0 ? UNLIMITED_GUESSES : clueCount + 1; // +1 allows one bonus guess
     room.phase = 'operative-guess';
     broadcastRoomState(room);
   });
@@ -265,7 +278,7 @@ io.on('connection', socket => {
     if (card.team === room.currentTeam) {
       room.scores[room.currentTeam]++;
       if (checkWin(room)) return broadcastRoomState(room);
-      if (room.guessesLeft !== 999) room.guessesLeft--;
+      if (room.guessesLeft !== UNLIMITED_GUESSES) room.guessesLeft--;
       if (room.guessesLeft <= 0) switchTurn(room);
     } else {
       // Wrong card: if it belongs to other team, score for them

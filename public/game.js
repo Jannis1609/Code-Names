@@ -196,7 +196,10 @@ function renderGameScreen(state) {
       tile.classList.add(teamClass);
     } else {
       tile.classList.add('unrevealed');
-      if (canClick) { tile.classList.add('clickable'); tile.addEventListener('click', () => socket.emit('reveal-card', { index: idx })); }
+      if (canClick) {
+        tile.classList.add('clickable');
+        tile.addEventListener('click', () => socket.emit('reveal-card', { index: idx }));
+      }
     }
 
     board.appendChild(tile);
@@ -208,9 +211,9 @@ function renderGameScreen(state) {
     clueDisplay.classList.remove('hidden');
     document.getElementById('clue-word').textContent  = state.clue.word;
     document.getElementById('clue-count').textContent = `Count: ${state.clue.count === 0 ? '∞' : state.clue.count}`;
-    const gl = state.guessesLeft;
-    document.getElementById('guesses-left').textContent = gl === null || gl === undefined ? '' :
-      (gl >= 999 ? 'Unlimited guesses' : `Guesses left: ${gl}`);
+    const guessesLeft = state.guessesLeft;
+    document.getElementById('guesses-left').textContent = guessesLeft === null || guessesLeft === undefined ? '' :
+      (guessesLeft >= 999 ? 'Unlimited guesses' : `Guesses left: ${guessesLeft}`);
   } else {
     clueDisplay.classList.add('hidden');
   }
